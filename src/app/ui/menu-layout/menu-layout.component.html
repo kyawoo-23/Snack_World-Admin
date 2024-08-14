@@ -1,0 +1,94 @@
+<mat-toolbar class="shadow flex justify-between items-center">
+  <div class="flex items-center md:gap-4">
+    <div class="w-16 md:pr-[14px] flex justify-center">
+      <button
+        color="primary"
+        mat-icon-button
+        aria-label="Menu icon"
+        (click)="toggleMenu()"
+      >
+        <mat-icon class="pb-8">{{
+          isMobile ? "menu" : !isCollapsed ? "chevron_left" : "chevron_right"
+        }}</mat-icon>
+      </button>
+    </div>
+    <a routerLink="/" class="flex items-center gap-4">
+      <img
+        ngSrc="assets/images/city-rewards-icon-dark.svg"
+        width="32"
+        height="32"
+        priority
+        alt="City Rewards Logo"
+        class="size-8"
+      />
+      <h3 class="!font-medium !text-lg hidden md:block">Admin Portal</h3>
+    </a>
+  </div>
+  <div class="flex items-start gap-4">
+    <button mat-button [matMenuTriggerFor]="profile">
+      <mat-icon>account_circle</mat-icon>
+      <span>Profile</span>
+    </button>
+    <mat-menu #profile="matMenu">
+      <ng-template matMenuContent>
+        <button mat-menu-item>
+          <a routerLink="my-profile">
+            <span class="flex items-center">
+              <mat-icon>person</mat-icon>
+              <span class="text-sm">My Profile</span>
+            </span>
+          </a>
+        </button>
+        <button mat-menu-item (click)="onLogout()">
+          <span class="flex items-center">
+            <mat-icon>logout</mat-icon>
+            <span class="text-sm">Logout</span>
+          </span>
+        </button>
+      </ng-template>
+    </mat-menu>
+  </div>
+</mat-toolbar>
+
+<mat-sidenav-container autosize>
+  <mat-sidenav
+    [mode]="isMobile ? 'over' : 'side'"
+    [opened]="isMobile ? 'false' : 'true'"
+    [class.expanded]="!isCollapsed"
+    class="flex flex-col"
+  >
+    <div class="h-full flex flex-col justify-between pb-2">
+      <mat-nav-list class="overflow-auto">
+        @for (route of routes; track $index) {
+          @for (menu of route.children; track $index) {
+            <a
+              mat-list-item
+              routerLink="{{ menu.path }}"
+              [routerLinkActiveOptions]="{ exact: true }"
+              routerLinkActive="nav-active"
+              class="!h-14"
+              matTooltip="{{ menu.title }}"
+              [matTooltipPosition]="'right'"
+              matTooltipDisabled="{{ !isCollapsed }}"
+            >
+              <span class="entry">
+                <mat-icon fontSet="material-icons-round" class="text-white">{{
+                  menu.icon
+                }}</mat-icon>
+                @if (!isCollapsed) {
+                  <span class="text-white pt-1">{{ menu.title }}</span>
+                }
+              </span>
+            </a>
+          }
+        }
+        <!-- <mat-divider class="mat-divider-nav-white"></mat-divider> -->
+      </mat-nav-list>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content class="px-6 my-6">
+    <div class="max-w-7xl mx-auto">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

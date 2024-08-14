@@ -1,4 +1,4 @@
-@use "../palette.scss" as palette;
+@use "../../../palette.scss" as palette;
 $toolbar-height: 56px;
 
 mat-toolbar {
@@ -61,4 +61,8 @@ mat-sidenav-content {
 
 .mat-drawer-container {
   background: none !important;
+}
+
+.mat-mdc-nav-list .mat-mdc-list-item {
+  border-radius: 0;
 }
