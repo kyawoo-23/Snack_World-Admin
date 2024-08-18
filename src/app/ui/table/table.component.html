@@ -1,0 +1,55 @@
+<div class="main-container mat-elevation-z1">
+  @if (isLoading) {
+    <div class="main-loading-shade flex flex-col gap-6">
+      <mat-spinner></mat-spinner>
+      <span class="text-primary-400 font-medium">Loading data...</span>
+    </div>
+  }
+
+  <div class="main-table-container">
+    <table mat-table [dataSource]="data" class="main-table">
+      @for (column of columns; track $index; let first = $first) {
+        <ng-container [matColumnDef]="column.columnDef">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ column.header }}
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let row"
+            [innerHTML]="column.cell(row)"
+          ></td>
+        </ng-container>
+      }
+
+      <!-- Actions column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let row">
+          <ng-container
+            *ngTemplateOutlet="actionTemplate; context: { $implicit: row }"
+          ></ng-container>
+        </td>
+      </ng-container>
+
+      <!-- Row shown when there is no matching data that will be provided to the wrapper table. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td
+          [class]="{
+            'mat-cell': true,
+            'text-center': true,
+            'py-5': true,
+            '!hidden': isLoading,
+          }"
+          [colSpan]="filtersHeader.length"
+        >
+          No data found
+        </td>
+      </tr>
+
+      <tr mat-header-row *matHeaderRowDef="filtersHeader; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: filtersHeader"></tr>
+    </table>
+  </div>
+
+  <ng-content></ng-content>
+</div>

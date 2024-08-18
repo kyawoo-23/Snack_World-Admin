@@ -19,6 +19,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { routes } from '@routes';
 import { NgOptimizedImage } from '@angular/common';
+import { getLocalStorage, setLocalStorage } from '@utils/common';
+import { LOCAL_STORAGES } from '@utils/constants';
 
 @Component({
   selector: 'app-menu-layout',
@@ -51,8 +53,7 @@ export class MenuLayoutComponent implements OnInit {
   @ViewChild(MatSidenav)
   sidenav!: MatSidenav;
   isMobile = true;
-  // isCollapsed = getLocalStorage(LOCAL_STORAGES.SIDEBAR_COLLAPSED) === 'true';
-  isCollapsed = true;
+  isCollapsed = getLocalStorage(LOCAL_STORAGES.SIDEBAR_COLLAPSED) === 'true';
 
   onLogout() {
     // this._auth.logout().subscribe({
@@ -72,10 +73,10 @@ export class MenuLayoutComponent implements OnInit {
     } else {
       this.sidenav.open(); // On desktop/tablet, the menu can never be fully closed
       this.isCollapsed = !this.isCollapsed;
-      // setLocalStorage(
-      //   LOCAL_STORAGES.SIDEBAR_COLLAPSED,
-      //   this.isCollapsed.toString()
-      // );
+      setLocalStorage(
+        LOCAL_STORAGES.SIDEBAR_COLLAPSED,
+        this.isCollapsed.toString(),
+      );
     }
   }
 
