@@ -1,0 +1,54 @@
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { catchError, throwError } from 'rxjs';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { LOCAL_STORAGES } from '@utils/constants';
+import { getLocalStorage } from '@utils/common';
+import { environment } from '@env/environment';
+
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const _router = inject(Router);
+  let authHeader = null;
+  let authReq = null;
+
+  const userData = getLocalStorage(LOCAL_STORAGES.USER_DATA);
+
+  if (userData != null) {
+    try {
+      const userToken = JSON.parse(userData).token;
+      authHeader = `Token ${userToken}`;
+    } catch (error) {
+      console.error('Error parsing cookie data:', error);
+    }
+  }
+
+  authReq = authHeader
+    ? req.clone({
+        setHeaders: {
+          Authorization: authHeader,
+        },
+      })
+    : req;
+
+  return next(authReq).pipe(
+    catchError((err: any) => {
+      if (err instanceof HttpErrorResponse) {
+        // Handle HTTP errors
+        if (err.status === 401) {
+          // Specific handling for unauthorized errors
+          console.error('Unauthorized request:', err);
+          _router.navigateByUrl('/login');
+        } else {
+          // Handle other HTTP error codes
+          console.error('HTTP error:', err);
+        }
+      } else {
+        // Handle non-HTTP errors
+        console.error('An error occurred:', err);
+      }
+
+      // Re-throw the error to propagate it further
+      return throwError(() => err);
+    }),
+  );
+};

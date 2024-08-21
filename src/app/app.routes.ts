@@ -1,5 +1,6 @@
 import { Route, Routes } from '@angular/router';
 import { HomeComponent } from '@pages/home/home.component';
+import { LoginComponent } from '@pages/login/login.component';
 import { MenuLayoutComponent } from '@ui/menu-layout/menu-layout.component';
 
 interface NavRoute extends Route {
@@ -10,6 +11,11 @@ interface NavRoute extends Route {
 type NavRoutes = NavRoute[];
 
 export const routes: NavRoutes = [
+  {
+    path: 'login',
+    icon: null,
+    component: LoginComponent,
+  },
   {
     path: '',
     icon: null,
