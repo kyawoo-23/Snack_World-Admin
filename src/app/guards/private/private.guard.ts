@@ -1,5 +1,14 @@
-import { CanActivateFn } from '@angular/router';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { getLocalStorage } from '@utils/common';
+import { LOCAL_STORAGES } from '@utils/constants';
 
 export const privateGuard: CanActivateFn = (route, state) => {
-  return true;
+  const router = inject(Router);
+
+  if (!getLocalStorage(LOCAL_STORAGES.USER_DATA)) {
+    return router.navigate(['/login']);
+  } else {
+    return true;
+  }
 };

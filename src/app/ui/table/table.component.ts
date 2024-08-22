@@ -25,7 +25,7 @@ export class TableComponent<T> implements OnInit {
   @Input({ required: true }) data: T[] = [];
   @Input({ required: true }) isLoading: boolean = false;
   @Input() actionTemplate: TemplateRef<any> | null = null;
-  @Input({ required: true }) isActionsTemplateVisible: boolean = true;
+  @Input({ required: true }) isActionTemplateVisible: boolean = false;
 
   tableColumns: TTableColumnDef<T>[] = [];
   filtersHeader: string[] = [];
@@ -33,10 +33,10 @@ export class TableComponent<T> implements OnInit {
   ngOnInit() {
     this.tableColumns = this.columns;
     this.filtersHeader = this.columns.map((column, i) => {
-      return `${column.header}`;
+      return `${column.columnDef}`;
     });
 
-    if (this.actionTemplate && this.isActionsTemplateVisible) {
+    if (this.actionTemplate && this.isActionTemplateVisible) {
       this.filtersHeader.push('actions');
     }
   }

@@ -14,14 +14,13 @@
     </div>
     <a routerLink="/" class="flex items-center gap-4">
       <img
-        ngSrc="assets/images/city-rewards-icon-dark.svg"
-        width="32"
-        height="32"
+        ngSrc="images/SNACK_WORLD.png"
+        width="64"
+        height="64"
         priority
-        alt="City Rewards Logo"
-        class="size-8"
+        alt="SNACK_WORLD Logo"
       />
-      <h3 class="!font-medium !text-lg hidden md:block">Admin Portal</h3>
+      <h3 class="!font-medium !text-lg hidden md:block">Admin Dashboard</h3>
     </a>
   </div>
   <div class="flex items-start gap-4">
@@ -61,25 +60,27 @@
       <mat-nav-list class="overflow-auto">
         @for (route of routes; track $index) {
           @for (menu of route.children; track $index) {
-            <a
-              mat-list-item
-              routerLink="{{ menu.path }}"
-              [routerLinkActiveOptions]="{ exact: true }"
-              routerLinkActive="nav-active"
-              class="!h-14"
-              matTooltip="{{ menu.title }}"
-              [matTooltipPosition]="'right'"
-              matTooltipDisabled="{{ !isCollapsed }}"
-            >
-              <span class="entry">
-                <mat-icon fontSet="material-icons-round" class="text-white">{{
-                  menu.icon
-                }}</mat-icon>
-                @if (!isCollapsed) {
-                  <span class="text-white pt-1">{{ menu.title }}</span>
-                }
-              </span>
-            </a>
+            @if (menu.icon) {
+              <a
+                mat-list-item
+                routerLink="{{ menu.path }}"
+                [routerLinkActiveOptions]="{ exact: true }"
+                routerLinkActive="nav-active"
+                class="!h-14"
+                matTooltip="{{ menu.title }}"
+                [matTooltipPosition]="'right'"
+                matTooltipDisabled="{{ !isCollapsed }}"
+              >
+                <span class="entry">
+                  <mat-icon fontSet="material-icons-round" class="text-white">{{
+                    menu.icon
+                  }}</mat-icon>
+                  @if (!isCollapsed) {
+                    <span class="text-white pt-1">{{ menu.title }}</span>
+                  }
+                </span>
+              </a>
+            }
           }
         }
         <!-- <mat-divider class="mat-divider-nav-white"></mat-divider> -->

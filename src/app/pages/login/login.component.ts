@@ -12,6 +12,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { setLocalStorage } from '@utils/common';
+import { LOCAL_STORAGES } from '@utils/constants';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -28,8 +32,11 @@ import {
   styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit {
+  private readonly _snackBar = inject(MatSnackBar);
+  private readonly _router = inject(Router);
   private readonly _formBuilder = inject(FormBuilder);
   private readonly _authService = inject(AuthService);
+
   form!: FormGroup;
 
   ngOnInit(): void {
@@ -43,9 +50,16 @@ export class LoginComponent implements OnInit {
     if (this.form) {
       this._authService.login(this.form.value).subscribe({
         next: (res) => {
-          console.log('Login successful:', res);
+          if (res.isSuccess) {
+            this._snackBar.open(res.message, 'Close');
+            setLocalStorage(LOCAL_STORAGES.USER_DATA, JSON.stringify(res.data));
+            this._router.navigate(['/']);
+          } else {
+            this._snackBar.open(res.message, 'Close');
+          }
         },
         error: (err) => {
+          this._snackBar.open(err.message, 'Close');
           console.error('Login failed:', err);
         },
       });

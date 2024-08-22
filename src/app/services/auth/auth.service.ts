@@ -1,6 +1,7 @@
 import { HttpBackend, HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment';
+import { TBaseResponse } from '@models/index';
 import { TLoginRequest, TLoginResponse } from '@models/login.model';
 import { Observable } from 'rxjs';
 
@@ -16,10 +17,12 @@ export class AuthService {
     this._httpBackend = new HttpClient(handler);
   }
 
-  login(request: TLoginRequest): Observable<TLoginResponse> {
-    // console.log('Login request:', environment.BASE_URL);
+  login(request: TLoginRequest): Observable<TBaseResponse<TLoginResponse>> {
     const url = environment.BASE_URL + this._authUrl + '/login';
-    const res = this._httpBackend.post<TLoginResponse>(url, request);
+    const res = this._httpBackend.post<TBaseResponse<TLoginResponse>>(
+      url,
+      request,
+    );
     return res;
   }
 

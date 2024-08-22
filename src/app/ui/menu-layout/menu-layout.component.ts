@@ -19,7 +19,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { routes } from '@routes';
 import { NgOptimizedImage } from '@angular/common';
-import { getLocalStorage, setLocalStorage } from '@utils/common';
+import {
+  getLocalStorage,
+  removeLocalStorageItem,
+  setLocalStorage,
+} from '@utils/common';
 import { LOCAL_STORAGES } from '@utils/constants';
 
 @Component({
@@ -56,14 +60,8 @@ export class MenuLayoutComponent implements OnInit {
   isCollapsed = getLocalStorage(LOCAL_STORAGES.SIDEBAR_COLLAPSED) === 'true';
 
   onLogout() {
-    // this._auth.logout().subscribe({
-    //   next: (res) => {
-    //     this.handleLogoutSuccess(res);
-    //   },
-    //   error: (err) => {
-    //     this.handleLogoutError(err);
-    //   },
-    // });
+    removeLocalStorageItem(LOCAL_STORAGES.USER_DATA);
+    this._router.navigate(['/login']);
   }
 
   toggleMenu() {

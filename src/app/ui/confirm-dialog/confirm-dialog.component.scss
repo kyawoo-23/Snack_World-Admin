@@ -1,0 +1,22 @@
+.mdc-dialog__title::before {
+  display: none;
+}
+
+.mdc-dialog__title {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.mat-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mat-mdc-dialog-actions {
+  padding: 8px 24px 18px 24px;
+}
+
+.mat-dialog-button {
+  height: 48px !important;
+}

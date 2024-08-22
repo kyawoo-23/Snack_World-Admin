@@ -4,7 +4,6 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { LOCAL_STORAGES } from '@utils/constants';
 import { getLocalStorage } from '@utils/common';
-import { environment } from '@env/environment';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const _router = inject(Router);
@@ -15,8 +14,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   if (userData != null) {
     try {
-      const userToken = JSON.parse(userData).token;
-      authHeader = `Token ${userToken}`;
+      const token = JSON.parse(userData).accessToken;
+      authHeader = `Bearer ${token}`;
     } catch (error) {
       console.error('Error parsing cookie data:', error);
     }

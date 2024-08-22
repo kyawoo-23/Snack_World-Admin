@@ -1,0 +1,51 @@
+<div>
+  <form
+    [formGroup]="form"
+    autocomplete="off"
+    (ngSubmit)="onSubmit()"
+    class="bg-white p-4 rounded shadow-lg max-w-xl mx-auto"
+  >
+    <div class="flex flex-col">
+      <h2 class="text-xl font-medium mb-4">Account Details</h2>
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" required />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Email address</mat-label>
+        <input
+          matInput
+          type="email"
+          formControlName="email"
+          autocomplete="off"
+          required
+        />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Role</mat-label>
+        <mat-select formControlName="role">
+          @for (role of roles; track $index) {
+            <mat-option [value]="role.adminRoleId">{{ role.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          type="password"
+          formControlName="password"
+          autocomplete="new-password"
+          required
+        />
+      </mat-form-field>
+
+      <button mat-flat-button color="primary" type="submit" class="!py-6">
+        Save
+      </button>
+    </div>
+  </form>
+</div>
