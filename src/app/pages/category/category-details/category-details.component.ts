@@ -12,15 +12,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AccountService } from '@services/account/account.service';
-import { AdminRoleService } from '@services/admin-role/admin-role.service';
-import { Admin, AdminRole } from 'app/prisma-types';
-import { LoaderComponent } from '@ui/loader/loader.component';
+import { ActivatedRoute } from '@angular/router';
+import { Category } from 'app/prisma-types';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CategoryService } from '@services/category/category.service';
+import { LoaderComponent } from '@ui/loader/loader.component';
 
 @Component({
-  selector: 'app-account-details',
+  selector: 'app-category-details',
   standalone: true,
   imports: [
     FormsModule,
@@ -32,67 +31,60 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatIcon,
     LoaderComponent,
   ],
-  templateUrl: './account-details.component.html',
-  styleUrl: './account-details.component.scss',
+  templateUrl: './category-details.component.html',
+  styleUrl: './category-details.component.scss',
 })
-export class AccountDetailsComponent {
+export class CategoryDetailsComponent {
   private readonly _snackBar = inject(MatSnackBar);
   private readonly _route = inject(ActivatedRoute);
   private readonly _formBuilder = inject(FormBuilder);
-  private readonly _accountSrv = inject(AccountService);
-  private readonly _roleSrv = inject(AdminRoleService);
+  private readonly _categorySrv = inject(CategoryService);
 
   paramId: string = '';
 
   isLoading: boolean = false;
   form!: FormGroup;
-  data: Admin | null = null;
-  roles: AdminRole[] = [];
+  data: Category | null = null;
   isSubmitting: boolean = false;
 
   onSubmit(): void {
     this.isSubmitting = true;
-    this._accountSrv.editAdminDetails(this.paramId, this.form.value).subscribe({
-      next: (res) => {
-        if (res.isSuccess) {
-          this._fetchDetails();
-        }
-        this._snackBar.open(res.message, 'Close');
-        this.isSubmitting = false;
-      },
-    });
+    this._categorySrv
+      .editCategoryDetails(this.paramId, this.form.value)
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccess) {
+            this._snackBar.open(res.message, 'Close');
+          }
+          this.isSubmitting = false;
+        },
+        error: () => {
+          this.isSubmitting = false;
+        },
+      });
   }
 
   ngOnInit(): void {
     this.paramId = this._route.snapshot.paramMap.get('id') || '';
     if (this.paramId) {
       this._fetchDetails();
-      this._roleSrv.getAdminRoleList().subscribe({
-        next: (res) => {
-          this.roles = res.data;
-        },
-      });
     }
 
     this.form = this._formBuilder.group({
       name: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      adminRoleId: new FormControl('', [Validators.required]),
     });
   }
 
   private _fetchDetails(): void {
     this.isLoading = true;
 
-    this._accountSrv.getAdminDetails(this.paramId).subscribe({
+    this._categorySrv.getCategoryDetails(this.paramId).subscribe({
       next: (res) => {
         this.data = res.data;
         this.isLoading = false;
 
         this.form.patchValue({
           name: this.data?.name,
-          email: this.data?.email,
-          adminRoleId: this.data?.adminRoleId,
         });
       },
       error: () => {

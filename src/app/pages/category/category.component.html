@@ -1,1 +1,26 @@
-<p>category works!</p>
+<app-main-layout title="Category List">
+  <button mat-flat-button color="primary" routerLink="create">
+    Create Category
+  </button>
+</app-main-layout>
+
+<app-table
+  [isLoading]="isLoading"
+  [columns]="columns"
+  [data]="data"
+  [isActionTemplateVisible]="true"
+  [actionTemplate]="actionTemplate"
+></app-table>
+
+<ng-template #actionTemplate let-data>
+  <div class="flex">
+    <button
+      class="!grid !place-content-center"
+      mat-icon-button
+      color="primary"
+      routerLink="{{ data.categoryId }}"
+    >
+      <mat-icon>edit</mat-icon>
+    </button>
+  </div>
+</ng-template>

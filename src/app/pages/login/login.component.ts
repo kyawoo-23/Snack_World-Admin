@@ -38,6 +38,7 @@ export class LoginComponent implements OnInit {
   private readonly _authService = inject(AuthService);
 
   form!: FormGroup;
+  isSubmitting: boolean = false;
 
   ngOnInit(): void {
     this.form = this._formBuilder.group({
@@ -48,6 +49,7 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     if (this.form) {
+      this.isSubmitting = true;
       this._authService.login(this.form.value).subscribe({
         next: (res) => {
           if (res.isSuccess) {
@@ -57,10 +59,12 @@ export class LoginComponent implements OnInit {
           } else {
             this._snackBar.open(res.message, 'Close');
           }
+          this.isSubmitting = false;
         },
         error: (err) => {
           this._snackBar.open(err.message, 'Close');
           console.error('Login failed:', err);
+          this.isSubmitting;
         },
       });
     }

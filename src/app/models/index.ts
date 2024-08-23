@@ -1,9 +1,10 @@
+import { SafeHtml } from '@angular/platform-browser';
 import { Observable, Subject } from 'rxjs';
 
 export type TTableColumnDef<T> = {
   columnDef: string;
   header: string;
-  cell: (item: T) => string;
+  cell: (item: T) => string | SafeHtml;
 };
 
 export type TBaseResponse<T> = {

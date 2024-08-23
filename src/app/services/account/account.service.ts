@@ -23,6 +23,11 @@ export class AccountService {
     return this._http.get<TBaseResponse<Admin>>(url);
   }
 
+  getAdminProfile(): Observable<TBaseResponse<Admin>> {
+    const url = environment.BASE_URL + this._accountUrl + '/profile';
+    return this._http.get<TBaseResponse<Admin>>(url);
+  }
+
   resetAdminPassword(id: string): Observable<TBaseResponse<Admin>> {
     const url =
       environment.BASE_URL + this._accountUrl + '/' + id + '/reset-password';
@@ -33,5 +38,18 @@ export class AccountService {
     const url =
       environment.BASE_URL + this._accountUrl + '/' + id + '/toggle-status';
     return this._http.patch<TBaseResponse<Admin>>(url, {});
+  }
+
+  editAdminDetails(
+    id: string,
+    request: Admin,
+  ): Observable<TBaseResponse<Admin>> {
+    const url = environment.BASE_URL + this._accountUrl + '/' + id;
+    return this._http.patch<TBaseResponse<Admin>>(url, request);
+  }
+
+  createAdmin(request: Admin): Observable<TBaseResponse<Admin>> {
+    const url = environment.BASE_URL + this._accountUrl;
+    return this._http.post<TBaseResponse<Admin>>(url, request);
   }
 }

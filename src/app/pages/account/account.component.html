@@ -1,5 +1,7 @@
 <app-main-layout title="Account List">
-  <button mat-flat-button color="primary">Create Account</button>
+  <button mat-flat-button color="primary" routerLink="create">
+    Create Account
+  </button>
 </app-main-layout>
 
 <app-table
@@ -10,13 +12,13 @@
   [actionTemplate]="actionTemplate"
 ></app-table>
 
-<ng-template #actionTemplate let-user>
+<ng-template #actionTemplate let-data>
   <div class="flex">
     <button
       class="!grid !place-content-center"
       mat-icon-button
       color="primary"
-      routerLink="/account/{{ user.adminId }}"
+      routerLink="{{ data.adminId }}"
     >
       <mat-icon>edit</mat-icon>
     </button>
@@ -24,17 +26,17 @@
     <button
       class="!grid !place-content-center"
       mat-icon-button
-      (click)="onResetPasswordClick(user.adminId)"
+      (click)="onResetPasswordClick(data.adminId)"
     >
       <mat-icon>lock_reset</mat-icon>
     </button>
     <button
       class="!grid !place-content-center"
       mat-icon-button
-      color="warn"
-      (click)="onToggleStatusClick(user.adminId)"
+      [color]="data.isActive ? 'warn' : 'primary'"
+      (click)="onToggleStatusClick(data.adminId)"
     >
-      @if (user.isActive) {
+      @if (data.isActive) {
         <mat-icon>block</mat-icon>
       } @else {
         <mat-icon>settings_backup_restore</mat-icon>

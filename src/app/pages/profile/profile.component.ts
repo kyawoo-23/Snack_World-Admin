@@ -18,9 +18,11 @@ import { AdminRoleService } from '@services/admin-role/admin-role.service';
 import { Admin, AdminRole } from 'app/prisma-types';
 import { LoaderComponent } from '@ui/loader/loader.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { getLocalStorage } from '@utils/common';
+import { LOCAL_STORAGES } from '@utils/constants';
 
 @Component({
-  selector: 'app-account-details',
+  selector: 'app-profile',
   standalone: true,
   imports: [
     FormsModule,
@@ -32,17 +34,17 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatIcon,
     LoaderComponent,
   ],
-  templateUrl: './account-details.component.html',
-  styleUrl: './account-details.component.scss',
+  templateUrl: './profile.component.html',
+  styleUrl: './profile.component.scss',
 })
-export class AccountDetailsComponent {
+export class ProfileComponent {
   private readonly _snackBar = inject(MatSnackBar);
   private readonly _route = inject(ActivatedRoute);
   private readonly _formBuilder = inject(FormBuilder);
   private readonly _accountSrv = inject(AccountService);
   private readonly _roleSrv = inject(AdminRoleService);
 
-  paramId: string = '';
+  token: string = '';
 
   isLoading: boolean = false;
   form!: FormGroup;
@@ -52,7 +54,7 @@ export class AccountDetailsComponent {
 
   onSubmit(): void {
     this.isSubmitting = true;
-    this._accountSrv.editAdminDetails(this.paramId, this.form.value).subscribe({
+    this._accountSrv.editAdminDetails(this.token, this.form.value).subscribe({
       next: (res) => {
         if (res.isSuccess) {
           this._fetchDetails();
@@ -64,19 +66,22 @@ export class AccountDetailsComponent {
   }
 
   ngOnInit(): void {
-    this.paramId = this._route.snapshot.paramMap.get('id') || '';
-    if (this.paramId) {
-      this._fetchDetails();
-      this._roleSrv.getAdminRoleList().subscribe({
-        next: (res) => {
-          this.roles = res.data;
-        },
-      });
+    const userData = getLocalStorage(LOCAL_STORAGES.USER_DATA);
+    if (userData !== null) {
+      this.token = JSON.parse(userData).sub;
     }
+
+    this._fetchDetails();
+    this._roleSrv.getAdminRoleList().subscribe({
+      next: (res) => {
+        this.roles = res.data;
+      },
+    });
 
     this.form = this._formBuilder.group({
       name: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl(''),
       adminRoleId: new FormControl('', [Validators.required]),
     });
   }
@@ -84,7 +89,7 @@ export class AccountDetailsComponent {
   private _fetchDetails(): void {
     this.isLoading = true;
 
-    this._accountSrv.getAdminDetails(this.paramId).subscribe({
+    this._accountSrv.getAdminDetails(this.token).subscribe({
       next: (res) => {
         this.data = res.data;
         this.isLoading = false;
