@@ -1,1 +1,38 @@
-<p>vendor works!</p>
+<app-main-layout title="Vendor List">
+  <button mat-flat-button color="primary" routerLink="create">
+    Register Vendor
+  </button>
+</app-main-layout>
+
+<app-table
+  [isLoading]="isLoading"
+  [columns]="columns"
+  [data]="data"
+  [isActionTemplateVisible]="true"
+  [actionTemplate]="actionTemplate"
+></app-table>
+
+<ng-template #actionTemplate let-data>
+  <div class="flex">
+    <button
+      class="!grid !place-content-center"
+      mat-icon-button
+      color="primary"
+      routerLink="{{ data.vendorId }}"
+    >
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button
+      class="!grid !place-content-center"
+      mat-icon-button
+      [color]="data.isActive ? 'warn' : 'primary'"
+      (click)="onToggleStatusClick(data.vendorId)"
+    >
+      @if (data.isActive) {
+        <mat-icon>block</mat-icon>
+      } @else {
+        <mat-icon>settings_backup_restore</mat-icon>
+      }
+    </button>
+  </div>
+</ng-template>
