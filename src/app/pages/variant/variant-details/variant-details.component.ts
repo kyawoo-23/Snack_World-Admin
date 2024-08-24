@@ -13,9 +13,8 @@ import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
-import { Category, Variant } from 'app/prisma-types';
+import { Variant } from 'app/prisma-types';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CategoryService } from '@services/category/category.service';
 import { LoaderComponent } from '@ui/loader/loader.component';
 import { VariantService } from '@services/variant/variant.service';
 

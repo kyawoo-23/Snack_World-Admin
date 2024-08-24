@@ -21,7 +21,7 @@
       color="primary"
       type="submit"
       class="!py-6"
-      [disabled]="isSubmitting"
+      [disabled]="isSubmitting || form.invalid"
     >
       {{ isSubmitting ? "Creating..." : "Create" }}
     </button>

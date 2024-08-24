@@ -1,1 +1,43 @@
-<p>vendor-details works!</p>
+@if (isLoading) {
+  <app-loader />
+} @else {
+  <form
+    [formGroup]="form"
+    autocomplete="off"
+    (ngSubmit)="onSubmit()"
+    class="bg-white p-4 rounded shadow-lg max-w-xl mx-auto"
+  >
+    <div class="flex flex-col">
+      <h2 class="text-xl font-medium mb-4">Variant Details</h2>
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" required />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input type="email" matInput formControlName="email" required />
+      </mat-form-field>
+
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit"
+        class="!py-6"
+        [disabled]="isSubmitting"
+      >
+        {{ isSubmitting ? "Saving..." : "Save" }}
+      </button>
+    </div>
+  </form>
+
+  <div class="mt-4">
+    <h3 class="text-md font-medium mb-4">Vendor User List</h3>
+    <app-table
+      [columns]="columns"
+      [data]="data?.vendorUser || []"
+      [isLoading]="isLoading"
+      [isActionTemplateVisible]="false"
+    ></app-table>
+  </div>
+}

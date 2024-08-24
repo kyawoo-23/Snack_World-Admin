@@ -1,13 +1,15 @@
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { TTableColumnDef } from '@models/index';
 import { VendorService } from '@services/vendor/vendor.service';
+import { ConfirmDialogComponent } from '@ui/confirm-dialog/confirm-dialog.component';
 import { MainLayoutComponent } from '@ui/main-layout/main-layout.component';
 import { TableComponent } from '@ui/table/table.component';
+import { DIALOG_SIZE } from '@utils/constants';
 import { Vendor } from 'app/prisma-types';
 import { map, startWith, Subject, switchMap } from 'rxjs';
 
@@ -25,7 +27,7 @@ import { map, startWith, Subject, switchMap } from 'rxjs';
   styleUrl: './vendor.component.scss',
 })
 export class VendorComponent {
-  private readonly _snackBar = inject(MatSnackBar);
+  private readonly _dialog = inject(MatDialog);
   private readonly _sanitizer = inject(DomSanitizer);
   private readonly _vendorSrv = inject(VendorService);
 
@@ -78,17 +80,14 @@ export class VendorComponent {
   }
 
   onToggleStatusClick(id: string) {
-    this._vendorSrv.toggleVendorStatus(id).subscribe({
-      next: (data) => {
-        if (data.isSuccess) {
-          this.fetchSubject.next();
-        }
-        this._snackBar.open(data.message, 'Close');
-      },
-      error: () => {
-        this._snackBar.open('Failed to update vendor status', 'Close', {
-          duration: 3000,
-        });
+    this._dialog.open(ConfirmDialogComponent, {
+      width: DIALOG_SIZE.SMALL,
+      data: {
+        title: 'Confirm',
+        message: 'Are you sure you want to change the status?',
+        confirmText: 'Change',
+        onSubmit: this._vendorSrv.toggleVendorStatus(id),
+        onSubmitSuccess: this.fetchSubject,
       },
     });
   }

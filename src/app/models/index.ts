@@ -18,6 +18,6 @@ export type TConfirmDialog = {
   title: string;
   message: string;
   confirmText: string;
-  onSubmit: Observable<void>;
+  onSubmit: Observable<TBaseResponse<void>>;
   onSubmitSuccess: Subject<void>;
 };

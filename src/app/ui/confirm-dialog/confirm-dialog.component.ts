@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject, Inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
@@ -6,7 +6,8 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import { TConfirmDialog } from '@models/index';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TBaseResponse, TConfirmDialog } from '@models/index';
 
 @Component({
   selector: 'app-confirm-dialog',
@@ -16,6 +17,7 @@ import { TConfirmDialog } from '@models/index';
   styleUrl: './confirm-dialog.component.scss',
 })
 export class ConfirmDialogComponent {
+  private readonly _snackBar = inject(MatSnackBar);
   isLoading: boolean = false;
 
   constructor(
@@ -31,10 +33,11 @@ export class ConfirmDialogComponent {
   onConfirmClick(): void {
     this.isLoading = true;
     this.data.onSubmit.subscribe({
-      next: () => {
+      next: (res) => {
         this.isLoading = false;
         this.data.onSubmitSuccess.next();
         this.dialogRef.close();
+        this._snackBar.open(res.message, 'Close');
       },
       error: () => {
         this.isLoading = false;
