@@ -5,6 +5,8 @@ import { publicGuard } from '@guards/public/public.guard';
 import { AccountCreateComponent } from '@pages/account/account-create/account-create.component';
 import { AccountDetailsComponent } from '@pages/account/account-details/account-details.component';
 import { AccountComponent } from '@pages/account/account.component';
+import { AnnouncementCreateComponent } from '@pages/announcement/announcement-create/announcement-create.component';
+import { AnnouncementComponent } from '@pages/announcement/announcement.component';
 import { CategoryCreateComponent } from '@pages/category/category-create/category-create.component';
 import { CategoryDetailsComponent } from '@pages/category/category-details/category-details.component';
 import { CategoryComponent } from '@pages/category/category.component';
@@ -70,6 +72,18 @@ export const routes: NavRoutes = [
         title: 'Account Details',
         icon: null,
         component: AccountDetailsComponent,
+      },
+      {
+        path: 'announcement',
+        title: 'Announcement',
+        icon: 'campaign',
+        component: AnnouncementComponent,
+      },
+      {
+        path: 'announcement/create',
+        title: 'Create Announcement',
+        icon: null,
+        component: AnnouncementCreateComponent,
       },
       {
         path: 'category',

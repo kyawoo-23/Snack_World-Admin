@@ -1,0 +1,10 @@
+<app-main-layout title="Announcement List">
+  <a mat-flat-button color="primary" routerLink="create"> Make Announcement </a>
+</app-main-layout>
+
+<app-table
+  [isLoading]="isLoading"
+  [columns]="columns"
+  [data]="data"
+  [isActionTemplateVisible]="false"
+></app-table>
