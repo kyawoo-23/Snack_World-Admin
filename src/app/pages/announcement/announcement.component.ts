@@ -57,7 +57,7 @@ export class AnnouncementComponent implements OnInit {
       header: 'Sent To',
       cell: (row: Announcement) => {
         if (row.type === 'ALL') {
-          return 'All';
+          return '<div class="font-medium bg-primary-400 text-white w-fit px-2 py-1 rounded">Everyone</div>';
         } else {
           if (row.announcementCustomer.length > 0) {
             let emails = "<div class='flex items-center flex-wrap gap-2'>";

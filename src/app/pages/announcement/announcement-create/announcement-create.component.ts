@@ -19,6 +19,8 @@ import { AnnouncementService } from '@services/announcement/announcement.service
 import { CustomerService } from '@services/customer/customer.service';
 import { VendorService } from '@services/vendor/vendor.service';
 import { InfoBoxComponent } from '@ui/info-box/info-box.component';
+import { ErrorTextComponent } from '@ui/error-text/error-text.component';
+import { TMultiSelectOption } from '@models/index';
 
 @Component({
   selector: 'app-announcement-create',
@@ -34,6 +36,7 @@ import { InfoBoxComponent } from '@ui/info-box/info-box.component';
     MatSelectModule,
     AngularMultiSelectModule,
     InfoBoxComponent,
+    ErrorTextComponent,
   ],
   templateUrl: './announcement-create.component.html',
   styleUrl: './announcement-create.component.scss',
@@ -47,22 +50,17 @@ export class AnnouncementCreateComponent {
   private readonly _vendorSrv = inject(VendorService);
 
   types = ['ALL', 'CUSTOMER', 'VENDOR'];
-  customerList: {
-    id: string;
-    itemName: string;
-  }[] = [];
-  vendorList: {
-    id: string;
-    itemName: string;
-  }[] = [];
+  customerList: TMultiSelectOption[] = [];
+  vendorList: TMultiSelectOption[] = [];
   dropdownSettings = {
     singleSelection: false,
-    text: 'Select Accounts to Send',
+    text: 'Select accounts to send',
     selectAllText: 'Select All',
     unSelectAllText: 'UnSelect All',
     enableSearchFilter: true,
     classes: 'myclass custom-class-example',
   };
+  error: string = '';
 
   form!: FormGroup;
   isLoading: boolean = false;
@@ -74,19 +72,41 @@ export class AnnouncementCreateComponent {
 
   onSubmit(): void {
     console.log(this.form.value);
-    // this.isSubmitting = true;
-    // this._announcementSrv.createAnnouncement(this.form.value).subscribe({
-    //   next: (res) => {
-    //     if (res.isSuccess) {
-    //       this._snackBar.open(res.message, 'Close');
-    //       this._router.navigate(['/announcement']);
-    //     }
-    //     this.isSubmitting = false;
-    //   },
-    //   error: () => {
-    //     this.isSubmitting = false;
-    //   },
-    // });
+
+    if (
+      this.selectedType === this.types[1] &&
+      this.form.get('customerId')?.value.length <= 0
+    ) {
+      this.error = 'Please select at least one customer';
+      return;
+    }
+
+    if (
+      this.selectedType === this.types[2] &&
+      this.form.get('vendorId')?.value.length <= 0
+    ) {
+      this.error = 'Please select at least one vendor';
+      return;
+    }
+
+    this.form.value.customerId = this.form.value.customerId.map(
+      (c: any) => c.id,
+    );
+    this.form.value.vendorId = this.form.value.vendorId.map((v: any) => v.id);
+
+    this.isSubmitting = true;
+    this._announcementSrv.createAnnouncement(this.form.value).subscribe({
+      next: (res) => {
+        if (res.isSuccess) {
+          this._snackBar.open(res.message, 'Close');
+          this._router.navigate(['/announcement']);
+        }
+        this.isSubmitting = false;
+      },
+      error: () => {
+        this.isSubmitting = false;
+      },
+    });
   }
 
   ngOnInit(): void {
@@ -104,9 +124,10 @@ export class AnnouncementCreateComponent {
   }
 
   private _typeChangeHandler(type: string): void {
-    this.isLoading = true;
+    this.error = '';
     if (type === 'CUSTOMER') {
       if (this.customerList.length <= 0) {
+        this.isLoading = true;
         this._customerSrv.getCustomerList().subscribe({
           next: (res) => {
             if (res.isSuccess) {
@@ -115,12 +136,14 @@ export class AnnouncementCreateComponent {
                 id: c.customerId,
                 itemName: c.email,
               }));
+              this.isLoading = false;
             }
           },
         });
       }
     } else if (type === 'VENDOR') {
       if (this.vendorList.length <= 0) {
+        this.isLoading = true;
         this._vendorSrv.getVendorList().subscribe({
           next: (res) => {
             if (res.isSuccess) {
@@ -129,6 +152,7 @@ export class AnnouncementCreateComponent {
                 id: v.vendorId,
                 itemName: v.email,
               }));
+              this.isLoading = false;
             }
           },
         });

@@ -21,3 +21,8 @@ export type TConfirmDialog = {
   onSubmit: Observable<TBaseResponse<void>>;
   onSubmitSuccess: Subject<void>;
 };
+
+export type TMultiSelectOption = {
+  id: string;
+  itemName: string;
+};

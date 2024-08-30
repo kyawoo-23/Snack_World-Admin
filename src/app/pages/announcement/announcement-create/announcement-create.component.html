@@ -37,6 +37,7 @@
             formControlName="customerId"
             [data]="customerList"
             [settings]="dropdownSettings"
+            [disabled]="isLoading"
           ></angular2-multiselect>
         }
         @case (types[2]) {
@@ -44,10 +45,17 @@
             formControlName="vendorId"
             [data]="vendorList"
             [settings]="dropdownSettings"
+            [disabled]="isLoading"
           ></angular2-multiselect>
         }
       }
     </div>
+
+    @if (error) {
+      <div class="mb-4">
+        <app-error-text [error]="error" />
+      </div>
+    }
 
     <button
       mat-flat-button

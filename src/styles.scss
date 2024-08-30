@@ -67,8 +67,16 @@ body {
 .list-filter {
   border-bottom: 1px solid #ccc;
 }
+.list-filter .c-search {
+  top: 10px !important;
+}
 .list-filter .c-search svg {
   fill: #888;
+}
+
+.list-filter .c-clear {
+  top: 10px !important;
+  cursor: pointer;
 }
 .list-filter .c-clear svg {
   fill: #888;
