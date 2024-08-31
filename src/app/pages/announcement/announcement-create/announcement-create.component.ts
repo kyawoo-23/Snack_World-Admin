@@ -114,8 +114,8 @@ export class AnnouncementCreateComponent {
       title: new FormControl('', [Validators.required]),
       content: new FormControl('', [Validators.required]),
       type: new FormControl(this.types[0], [Validators.required]),
-      customerId: new FormControl([], [Validators.required]),
-      vendorId: new FormControl([], [Validators.required]),
+      customerId: new FormControl([]),
+      vendorId: new FormControl([]),
     });
 
     this.form.get('type')?.valueChanges.subscribe((type) => {

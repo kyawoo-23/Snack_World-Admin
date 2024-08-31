@@ -8,3 +8,7 @@ export const DIALOG_SIZE = {
   MEDIUM: '550px',
   LARGE: '1080px',
 };
+
+export const PAGE_SIZE = 10;
+
+export const PLACEHOLDER_IMAGE = 'images/placeholder-image.jpg';

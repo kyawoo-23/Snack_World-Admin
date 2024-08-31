@@ -1,10 +1,18 @@
 <app-main-layout title="Announcement List">
-  <a mat-flat-button color="primary" routerLink="create"> Make Announcement </a>
+  <a mat-flat-button color="primary" routerLink="create">Make Announcement</a>
 </app-main-layout>
 
 <app-table
   [isLoading]="isLoading"
   [columns]="columns"
-  [data]="data"
+  [data]="dataList"
   [isActionTemplateVisible]="false"
-></app-table>
+>
+  <mat-paginator
+    [length]="isLoading ? 0 : data.length"
+    [pageSize]="pageSize"
+    aria-label="Select page of search results"
+    [disabled]="isLoading"
+  >
+  </mat-paginator>
+</app-table>

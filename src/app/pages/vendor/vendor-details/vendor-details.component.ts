@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -19,6 +19,8 @@ import { LoaderComponent } from '@ui/loader/loader.component';
 import { VendorService } from '@services/vendor/vendor.service';
 import { TableComponent } from '../../../ui/table/table.component';
 import { TTableColumnDef } from '@models/index';
+import { PAGE_SIZE, PLACEHOLDER_IMAGE } from '@utils/constants';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-vendor-details',
@@ -33,6 +35,7 @@ import { TTableColumnDef } from '@models/index';
     MatIcon,
     LoaderComponent,
     TableComponent,
+    MatPaginatorModule,
   ],
   templateUrl: './vendor-details.component.html',
   styleUrl: './vendor-details.component.scss',
@@ -45,9 +48,11 @@ export class VendorDetailsComponent {
 
   paramId: string = '';
 
+  pageSize = PAGE_SIZE;
   isLoading: boolean = false;
   form!: FormGroup;
   data: Vendor | null = null;
+  dataList: VendorUser[] = [];
   isSubmitting: boolean = false;
 
   onSubmit(): void {
@@ -83,6 +88,7 @@ export class VendorDetailsComponent {
     this._vendorSrv.getVendorDetails(this.paramId).subscribe({
       next: (res) => {
         this.data = res.data;
+        this.dataList = res.data.vendorUser.slice(0, this.pageSize);
         this.isLoading = false;
 
         this.form.patchValue({
@@ -118,4 +124,21 @@ export class VendorDetailsComponent {
       cell: (row: VendorUser) => (row.isActive ? 'Active' : 'Inactive'),
     },
   ];
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  ngAfterViewInit(): void {
+    this.paginator.page.subscribe(() => {
+      const offset = this.paginator.pageIndex * this.paginator.pageSize;
+      const limit = this.paginator.pageSize;
+
+      if (this.data) {
+        this.dataList = this.data?.vendorUser.slice(offset, offset + limit);
+      }
+    });
+  }
+
+  onImageError(event: ErrorEvent): void {
+    const target = event.target as HTMLImageElement;
+    target.src = PLACEHOLDER_IMAGE;
+  }
 }

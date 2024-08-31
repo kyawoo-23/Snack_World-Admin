@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { TTableColumnDef } from '@models/index';
@@ -10,6 +10,8 @@ import { TableComponent } from '@ui/table/table.component';
 import { MatIcon } from '@angular/material/icon';
 import { DatePipe } from '@angular/common';
 import { convertToDateTime } from '@utils/common';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { PAGE_SIZE } from '@utils/constants';
 
 @Component({
   selector: 'app-announcement',
@@ -21,6 +23,7 @@ import { convertToDateTime } from '@utils/common';
     TableComponent,
     MatIcon,
     DatePipe,
+    MatPaginatorModule,
   ],
   templateUrl: './announcement.component.html',
   styleUrl: './announcement.component.scss',
@@ -28,7 +31,9 @@ import { convertToDateTime } from '@utils/common';
 export class AnnouncementComponent implements OnInit {
   private readonly _announcementSrv = inject(AnnouncementService);
 
+  pageSize = PAGE_SIZE;
   data: Announcement[] = [];
+  dataList: Announcement[] = [];
   isLoading: boolean = false;
   fetchSubject = new Subject<void>();
   columns: TTableColumnDef<Announcement>[] = [
@@ -103,11 +108,22 @@ export class AnnouncementComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.data = data;
+          this.dataList = data.slice(0, this.pageSize);
           this.isLoading = false;
         },
         error: () => {
           this.isLoading = false;
         },
       });
+  }
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  ngAfterViewInit(): void {
+    this.paginator.page.subscribe(() => {
+      const offset = this.paginator.pageIndex * this.paginator.pageSize;
+      const limit = this.paginator.pageSize;
+
+      this.dataList = this.data.slice(offset, offset + limit);
+    });
   }
 }

@@ -9,7 +9,7 @@ import { VendorService } from '@services/vendor/vendor.service';
 import { ConfirmDialogComponent } from '@ui/confirm-dialog/confirm-dialog.component';
 import { MainLayoutComponent } from '@ui/main-layout/main-layout.component';
 import { TableComponent } from '@ui/table/table.component';
-import { DIALOG_SIZE } from '@utils/constants';
+import { DIALOG_SIZE, PLACEHOLDER_IMAGE } from '@utils/constants';
 import { Vendor } from 'app/prisma-types';
 import { map, startWith, Subject, switchMap } from 'rxjs';
 
@@ -39,7 +39,7 @@ export class VendorComponent {
       columnDef: 'image',
       header: 'Image',
       cell: (row: Vendor) => {
-        const div = `<img src="${row.image || 'images/placeholder-image.jpg'}" class="size-8 rounded shadow object-cover" />`;
+        const div = `<img src="${row.image || PLACEHOLDER_IMAGE}" class="size-8 rounded shadow object-cover" />`;
         return this._sanitizer.bypassSecurityTrustHtml(div);
       },
     },

@@ -1,43 +1,62 @@
 @if (isLoading) {
   <app-loader />
 } @else {
-  <form
-    [formGroup]="form"
-    autocomplete="off"
-    (ngSubmit)="onSubmit()"
-    class="bg-white p-4 rounded shadow-lg max-w-xl mx-auto"
-  >
-    <div class="flex flex-col">
-      <h2 class="text-xl font-medium mb-4">Variant Details</h2>
-      <mat-form-field>
-        <mat-label>Name</mat-label>
-        <input matInput formControlName="name" required />
-      </mat-form-field>
+  <div class="grid grid-cols-3 gap-8">
+    <form
+      [formGroup]="form"
+      autocomplete="off"
+      (ngSubmit)="onSubmit()"
+      class="bg-white p-4 rounded shadow-lg"
+    >
+      <div class="flex flex-col">
+        <h2 class="text-xl font-medium mb-4">Vendor Details</h2>
 
-      <mat-form-field>
-        <mat-label>Email</mat-label>
-        <input type="email" matInput formControlName="email" required />
-      </mat-form-field>
+        <div class="size-52 mb-4 mx-auto rounded shadow">
+          <img
+            class="object-cover rounded size-full"
+            [src]="data?.image"
+            (error)="onImageError($event)"
+          />
+        </div>
 
-      <button
-        mat-flat-button
-        color="primary"
-        type="submit"
-        class="!py-6"
-        [disabled]="isSubmitting"
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" required />
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input type="email" matInput formControlName="email" required />
+        </mat-form-field>
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="!py-6"
+          [disabled]="isSubmitting"
+        >
+          {{ isSubmitting ? "Saving..." : "Save" }}
+        </button>
+      </div>
+    </form>
+
+    <div class="col-span-2">
+      <h3 class="text-md font-medium mb-4">Vendor User List</h3>
+      <app-table
+        [columns]="columns"
+        [data]="dataList || []"
+        [isLoading]="isLoading"
+        [isActionTemplateVisible]="false"
       >
-        {{ isSubmitting ? "Saving..." : "Save" }}
-      </button>
+        <mat-paginator
+          [length]="isLoading ? 0 : data?.vendorUser?.length"
+          [pageSize]="pageSize"
+          aria-label="Select page of search results"
+          [disabled]="isLoading"
+        >
+        </mat-paginator
+      ></app-table>
     </div>
-  </form>
-
-  <div class="mt-4">
-    <h3 class="text-md font-medium mb-4">Vendor User List</h3>
-    <app-table
-      [columns]="columns"
-      [data]="data?.vendorUser || []"
-      [isLoading]="isLoading"
-      [isActionTemplateVisible]="false"
-    ></app-table>
   </div>
 }

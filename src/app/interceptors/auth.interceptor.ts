@@ -3,7 +3,7 @@ import { catchError, throwError } from 'rxjs';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { LOCAL_STORAGES } from '@utils/constants';
-import { getLocalStorage } from '@utils/common';
+import { getLocalStorage, removeLocalStorageItem } from '@utils/common';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const _router = inject(Router);
@@ -35,6 +35,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         // Handle HTTP errors
         if (err.status === 401) {
           // Specific handling for unauthorized errors
+          removeLocalStorageItem(LOCAL_STORAGES.USER_DATA);
           console.error('Unauthorized request:', err);
           _router.navigateByUrl('/login');
         } else {

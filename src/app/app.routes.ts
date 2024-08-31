@@ -1,4 +1,3 @@
-import { Variant } from './prisma-types/index';
 import { Route } from '@angular/router';
 import { privateGuard } from '@guards/private/private.guard';
 import { publicGuard } from '@guards/public/public.guard';
