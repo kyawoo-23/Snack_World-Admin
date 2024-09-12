@@ -9,6 +9,7 @@ import { AnnouncementComponent } from '@pages/announcement/announcement.componen
 import { CategoryCreateComponent } from '@pages/category/category-create/category-create.component';
 import { CategoryDetailsComponent } from '@pages/category/category-details/category-details.component';
 import { CategoryComponent } from '@pages/category/category.component';
+import { DeliveryCreateComponent } from '@pages/delivery/delivery-create/delivery-create.component';
 import { DeliveryComponent } from '@pages/delivery/delivery.component';
 import { LoginComponent } from '@pages/login/login.component';
 import { NotFoundComponent } from '@pages/not-found/not-found.component';
@@ -44,9 +45,21 @@ export const routes: NavRoutes = [
     children: [
       {
         path: '',
+        icon: null,
+        pathMatch: 'full',
+        redirectTo: 'delivery',
+      },
+      {
+        path: 'delivery',
         title: 'Delivery',
         icon: 'local_shipping',
         component: DeliveryComponent,
+      },
+      {
+        path: 'delivery/create',
+        title: 'Create Delivery',
+        icon: null,
+        component: DeliveryCreateComponent,
       },
       {
         path: 'profile',
