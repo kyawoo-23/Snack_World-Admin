@@ -1,3 +1,24 @@
 <app-main-layout title="Delivery List">
-  <a mat-flat-button color="primary" routerLink="create"> Create Delivery </a>
+  <a mat-flat-button color="primary" routerLink="create">Create Delivery</a>
 </app-main-layout>
+
+<app-table
+  [isLoading]="isLoading"
+  [columns]="columns"
+  [data]="data"
+  [isActionTemplateVisible]="true"
+  [actionTemplate]="actionTemplate"
+></app-table>
+
+<ng-template #actionTemplate let-data>
+  <div class="flex">
+    <button
+      class="!grid !place-content-center"
+      mat-icon-button
+      color="primary"
+      routerLink="{{ data.deliveryId }}"
+    >
+      <mat-icon>edit</mat-icon>
+    </button>
+  </div>
+</ng-template>

@@ -63,4 +63,33 @@
     </table>
   </div>
 </div>
-<button (click)="hi()">hi</button>
+
+<div class="flex justify-between items-center mt-4">
+  <mat-form-field>
+    <mat-label>Assign Admin</mat-label>
+    <mat-select [(value)]="selectedAdmin">
+      @for (admin of adminList; track admin) {
+        <mat-option [value]="admin.adminId">{{ admin.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <div class="flex items-center gap-2 mb-4">
+    <a
+      routerLink="/delivery"
+      [disabled]="isSubmitting"
+      mat-stroked-button
+      color="primary"
+    >
+      Cancel
+    </a>
+    <button
+      (click)="createDelivery()"
+      [disabled]="isSubmitting"
+      mat-flat-button
+      color="primary"
+    >
+      Create Delivery
+    </button>
+  </div>
+</div>
