@@ -28,6 +28,13 @@
         </td>
       </ng-container>
 
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Ordered At.</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.createdAt | date: "dd/MM/yyyy hh:MM:ss a" }}
+        </td>
+      </ng-container>
+
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef>Order No.</th>
         <td mat-cell *matCellDef="let element">{{ element.deliveryName }}</td>
@@ -40,17 +47,35 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="address">
-        <th mat-header-cell *matHeaderCellDef>Address</th>
+      <ng-container matColumnDef="details">
+        <th mat-header-cell *matHeaderCellDef>Delivery Details</th>
         <td mat-cell *matCellDef="let element">
-          {{ element.customerOrderVendor.deliveryAddress }}
+          <div class="py-2">
+            {{ element.customerOrderVendor.customerOrder.customer.name }},
+            {{ element.customerOrderVendor.deliveryAddress }},
+            {{ element.customerOrderVendor.customerOrder.deliveryContact }}
+          </div>
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="contact">
-        <th mat-header-cell *matHeaderCellDef>Contact</th>
+      <ng-container matColumnDef="products">
+        <th mat-header-cell *matHeaderCellDef>Products</th>
         <td mat-cell *matCellDef="let element">
-          {{ element.customerOrderVendor.customerOrder.deliveryContact }}
+          <div
+            class="flex gap-1 flex-wrap"
+            [innerHTML]="
+              getProducts(
+                element.customerOrderVendor.customerOrderVendorProduct
+              )
+            "
+          ></div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef>Total Amount</th>
+        <td mat-cell *matCellDef="let element">
+          ${{ element.customerOrderVendor.customerOrder.totalPrice }}
         </td>
       </ng-container>
 

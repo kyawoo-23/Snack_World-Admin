@@ -3,7 +3,11 @@ import { DeliveryOrderService } from '@services/delivery-order/delivery-order.se
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { Admin, DeliveryOrder } from 'app/prisma-types';
+import {
+  Admin,
+  CustomerOrderVendorProduct,
+  DeliveryOrder,
+} from 'app/prisma-types';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { DeliveryService } from '@services/delivery/delivery.service';
 import { Router, RouterLink } from '@angular/router';
@@ -11,6 +15,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { AccountService } from '@services/account/account.service';
 import { MatSelectModule } from '@angular/material/select';
+import { DomSanitizer } from '@angular/platform-browser';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-delivery-create',
@@ -22,6 +28,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatButtonModule,
     RouterLink,
     MatSelectModule,
+    DatePipe,
   ],
   templateUrl: './delivery-create.component.html',
   styleUrl: './delivery-create.component.scss',
@@ -32,6 +39,7 @@ export class DeliveryCreateComponent implements OnInit {
   private readonly _deliverySrv = inject(DeliveryService);
   private readonly _deliveryOrderSrv = inject(DeliveryOrderService);
   private readonly _adminSrv = inject(AccountService);
+  private readonly _sanitizer = inject(DomSanitizer);
 
   isSubmitting: boolean = false;
   isLoading: boolean = false;
@@ -39,13 +47,25 @@ export class DeliveryCreateComponent implements OnInit {
   selectedAdmin = '';
   displayedColumns: string[] = [
     'select',
+    'date',
     'name',
     'vendor',
-    'address',
-    'contact',
+    'details',
+    'products',
+    'amount',
   ];
   dataSource = new MatTableDataSource<DeliveryOrder>();
   selection = new SelectionModel<DeliveryOrder>(true, []);
+
+  getProducts(products: CustomerOrderVendorProduct[]) {
+    const productsDiv = products
+      .map(
+        (x) =>
+          `<div class="py-1 px-2 rounded border border-gray-400 text-xs">${x.productName} (${x.variantName}) x ${x.quantity}</div>`,
+      )
+      .join('');
+    return this._sanitizer.bypassSecurityTrustHtml(productsDiv);
+  }
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
@@ -88,7 +108,7 @@ export class DeliveryCreateComponent implements OnInit {
       'ADMIN';
 
     const deliveryCode = `DEL-${new Date().toISOString().slice(0, 10)}-${Math.floor(Math.random() * 10000)}`;
-    const deliveryName = `${new Date().toLocaleDateString()}-${selectedAdminName}`;
+    const deliveryName = this._generateDeliveryRouteName(selectedAdminName);
 
     this._deliverySrv
       .createDelivery({
@@ -148,5 +168,33 @@ export class DeliveryCreateComponent implements OnInit {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.deliveryOrderId}`;
+  }
+
+  private _generateDeliveryRouteName(adminName: string): string {
+    // Helper function to get initials from a name
+    const getInitials = (name: string): string =>
+      name
+        .split(' ')
+        .map((word) => word.charAt(0).toUpperCase())
+        .join('');
+
+    // Format the current date as DDMMYY
+    const currentDate = new Date();
+    const formattedDate = `${String(currentDate.getDate()).padStart(2, '0')}${String(
+      currentDate.getMonth() + 1,
+    ).padStart(2, '0')}${String(currentDate.getFullYear()).slice(-2)}`;
+
+    // Get initials of the assigned admin name
+    const adminInitials = getInitials(adminName);
+
+    // Generate a unique identifier using a timestamp and a random alphanumeric character
+    const uniqueId = `${Date.now().toString().slice(-4)}${Math.random()
+      .toString(36)
+      .charAt(2)}`;
+
+    // Combine all parts to form the route name
+    const routeName = `${formattedDate}-${adminInitials}-${uniqueId}`;
+
+    return routeName;
   }
 }
