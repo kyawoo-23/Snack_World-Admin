@@ -51,7 +51,10 @@ export class VendorComponent {
     {
       columnDef: 'isActive',
       header: 'Status',
-      cell: (row: Vendor) => (row.isActive ? 'Active' : 'Inactive'),
+      cell: (row: Vendor) => {
+        const div = `<div style="background: ${row.isActive ? '#28a745' : '#EE4E4E'}" class="w-fit rounded text-white px-2 py-1">${row.isActive ? 'ACTIVE' : 'INACTIVE'}</div>`;
+        return this._sanitizer.bypassSecurityTrustHtml(div);
+      },
     },
   ];
 

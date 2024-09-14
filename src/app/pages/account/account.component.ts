@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { TTableColumnDef } from '@models/index';
 import { AccountService } from '@services/account/account.service';
@@ -26,6 +27,7 @@ import { map, startWith, Subject, switchMap } from 'rxjs';
   styleUrl: './account.component.scss',
 })
 export class AccountComponent {
+  private readonly _sanitizer = inject(DomSanitizer);
   private readonly _dialog = inject(MatDialog);
   private readonly _accountSrv = inject(AccountService);
 
@@ -51,7 +53,10 @@ export class AccountComponent {
     {
       columnDef: 'status',
       header: 'Status',
-      cell: (row: Admin) => (row.isActive ? 'Active' : 'Inactive'),
+      cell: (row: Admin) => {
+        const div = `<div style="background: ${row.isActive ? '#28a745' : '#EE4E4E'}" class="w-fit rounded text-white px-2 py-1">${row.isActive ? 'ACTIVE' : 'INACTIVE'}</div>`;
+        return this._sanitizer.bypassSecurityTrustHtml(div);
+      },
     },
   ];
 

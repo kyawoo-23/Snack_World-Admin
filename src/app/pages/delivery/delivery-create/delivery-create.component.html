@@ -79,6 +79,21 @@
         </td>
       </ng-container>
 
+      <!-- Row shown when there is no matching data that will be provided to the wrapper table. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td
+          [class]="{
+            'mat-cell': true,
+            'text-center': true,
+            'py-5': true,
+            '!hidden': isLoading,
+          }"
+          [colSpan]="displayedColumns.length"
+        >
+          No data found
+        </td>
+      </tr>
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr
         mat-row
@@ -89,8 +104,8 @@
   </div>
 </div>
 
-<div class="flex justify-between items-center mt-4">
-  <mat-form-field>
+<div class="flex flex-col w-fit mt-4 ml-auto">
+  <mat-form-field class="w-full">
     <mat-label>Assign Admin</mat-label>
     <mat-select [(value)]="selectedAdmin">
       @for (admin of adminList; track admin) {

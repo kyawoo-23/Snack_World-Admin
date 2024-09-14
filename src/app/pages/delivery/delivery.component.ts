@@ -1,12 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { TTableColumnDef } from '@models/index';
 import { DeliveryService } from '@services/delivery/delivery.service';
 import { MainLayoutComponent } from '@ui/main-layout/main-layout.component';
 import { TableComponent } from '@ui/table/table.component';
-import { convertToDateTime } from '@utils/common';
+import { convertToDateTime, getDeliveryStatusColor } from '@utils/common';
+import { DELIVERY_STATUS } from '@utils/constants';
 import { Delivery } from 'app/prisma-types';
 
 @Component({
@@ -23,6 +25,7 @@ import { Delivery } from 'app/prisma-types';
   styleUrl: './delivery.component.scss',
 })
 export class DeliveryComponent implements OnInit {
+  private readonly _sanitizer = inject(DomSanitizer);
   private readonly _deliverySrv = inject(DeliveryService);
 
   data: Delivery[] = [];
@@ -40,7 +43,7 @@ export class DeliveryComponent implements OnInit {
     },
     {
       columnDef: 'route',
-      header: 'Order count',
+      header: 'Order Count',
       cell: (row: Delivery) => row.deliveryOrder.length,
     },
     {
@@ -51,7 +54,10 @@ export class DeliveryComponent implements OnInit {
     {
       columnDef: 'status',
       header: 'Status',
-      cell: (row: Delivery) => row.deliveryStatus,
+      cell: (row: Delivery) => {
+        const div = `<div style="background: ${getDeliveryStatusColor(row.deliveryStatus as DELIVERY_STATUS)}" class="w-fit rounded text-white px-2 py-1">${row.deliveryStatus}</div>`;
+        return this._sanitizer.bypassSecurityTrustHtml(div);
+      },
     },
   ];
 
