@@ -10,6 +10,7 @@ import { CategoryCreateComponent } from '@pages/category/category-create/categor
 import { CategoryDetailsComponent } from '@pages/category/category-details/category-details.component';
 import { CategoryComponent } from '@pages/category/category.component';
 import { DeliveryCreateComponent } from '@pages/delivery/delivery-create/delivery-create.component';
+import { DeliveryDetailsComponent } from '@pages/delivery/delivery-details/delivery-details.component';
 import { DeliveryComponent } from '@pages/delivery/delivery.component';
 import { LoginComponent } from '@pages/login/login.component';
 import { NotFoundComponent } from '@pages/not-found/not-found.component';
@@ -60,6 +61,12 @@ export const routes: NavRoutes = [
         title: 'Create Delivery',
         icon: null,
         component: DeliveryCreateComponent,
+      },
+      {
+        path: 'delivery/:id',
+        title: 'Delivery Details',
+        icon: null,
+        component: DeliveryDetailsComponent,
       },
       {
         path: 'profile',

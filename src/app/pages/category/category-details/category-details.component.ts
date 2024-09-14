@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -34,7 +34,7 @@ import { LoaderComponent } from '@ui/loader/loader.component';
   templateUrl: './category-details.component.html',
   styleUrl: './category-details.component.scss',
 })
-export class CategoryDetailsComponent {
+export class CategoryDetailsComponent implements OnInit {
   private readonly _snackBar = inject(MatSnackBar);
   private readonly _route = inject(ActivatedRoute);
   private readonly _formBuilder = inject(FormBuilder);

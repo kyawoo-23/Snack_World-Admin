@@ -1,1 +1,47 @@
-<p>delivery-details works!</p>
+@if (isLoading) {
+  <app-loader />
+} @else {
+  <div class="p-4 rounded shadow-lg bg-primary-400 text-white space-y-3">
+    <div class="grid grid-cols-4 gap-4">
+      <div>
+        <h1 class="font-medium text-lg">Delivery Name</h1>
+        <p>{{ data?.deliveryName }}</p>
+      </div>
+      <div>
+        <h1 class="font-medium text-lg">Admin Name</h1>
+        <p>{{ data?.admin?.name }}</p>
+      </div>
+      <div>
+        <h1 class="font-medium text-lg">Order Progress</h1>
+        <p>{{ getDeliveredOrders }}/{{ data?.deliveryOrder?.length }}</p>
+      </div>
+      <div>
+        <h1 class="font-medium text-lg">Delivery Status</h1>
+        {{ data?.deliveryStatus }}
+      </div>
+      <div>
+        <h1 class="font-medium text-lg">Created At</h1>
+        <p>{{ data?.createdAt | date: "dd/MM/yyyy hh:MM:ss a" }}</p>
+      </div>
+      <div>
+        <h1 class="font-medium text-lg">Last Updated</h1>
+        <p>{{ data?.updatedAt | date: "dd/MM/yyyy hh:MM:ss a" }}</p>
+      </div>
+      <div>
+        <h1 class="font-medium text-lg">Total Amount</h1>
+        <p>{{ getTotalAmount }}</p>
+      </div>
+      <div class="self-center">
+        @if (checkIfAllDelivered) {
+          <button mat-flat-button (click)="onDeliveryEnd()">
+            Finish Delivery
+          </button>
+        } @else if (data?.deliveryStatus === DELIVERY_STATUS.PENDING) {
+          <button mat-flat-button (click)="onDeliveryStart()">
+            Start Delivery
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+}

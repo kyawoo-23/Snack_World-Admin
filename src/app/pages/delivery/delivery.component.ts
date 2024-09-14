@@ -28,9 +28,29 @@ export class DeliveryComponent implements OnInit {
   isLoading: boolean = false;
   columns: TTableColumnDef<Delivery>[] = [
     {
+      columnDef: 'date',
+      header: 'Date',
+      cell: (row: Delivery) => row.createdAt,
+    },
+    {
       columnDef: 'name',
       header: 'Delivery Name',
       cell: (row: Delivery) => row.deliveryName,
+    },
+    {
+      columnDef: 'route',
+      header: 'Order count',
+      cell: (row: Delivery) => row.deliveryOrder.length,
+    },
+    {
+      columnDef: 'admin',
+      header: 'Assigned to',
+      cell: (row: Delivery) => row.admin.name,
+    },
+    {
+      columnDef: 'status',
+      header: 'Status',
+      cell: (row: Delivery) => row.deliveryStatus,
     },
   ];
 
