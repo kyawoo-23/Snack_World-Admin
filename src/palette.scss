@@ -4,22 +4,22 @@
 $dark-primary-text: rgba(black, 0.87);
 $light-primary-text: white;
 
-$cr-purple-palette: (
-  50: #eae6f1,
-  100: #cbc0dd,
-  200: #a997c6,
-  300: #876eb0,
-  400: #6f51a0,
-  500: #583590,
-  600: #50308b,
-  700: #452982,
-  800: #3b2379,
-  900: #2b186c,
+$app-primary-palette: (
+  50: #f1e9e0,
+  100: #dcc7b3,
+  200: #c5a284,
+  300: #ad7e56,
+  400: #543310,
+  500: #4c2e0e,
+  600: #44280d,
+  700: #3b220b,
+  800: #331b09,
+  900: #241206,
   contrast: (
     50: $dark-primary-text,
     100: $dark-primary-text,
     200: $dark-primary-text,
-    300: $dark-primary-text,
+    300: $light-primary-text,
     400: $light-primary-text,
     500: $light-primary-text,
     600: $light-primary-text,
@@ -29,27 +29,27 @@ $cr-purple-palette: (
   ),
 );
 
-$cr-yellow-palette: (
-  50: #fffde6,
-  100: #fff8c1,
-  200: #fff497,
-  300: #ffef6c,
-  400: #feea47,
-  500: #fce51a,
-  600: #ffd51c,
-  700: #febd13,
-  800: #fda409,
-  900: #fa7900,
+$app-secondary-palette: (
+  50: #e6f2f1,
+  100: #b3d9d5,
+  200: #80bfb9,
+  300: #4da69c,
+  400: #1a8c80,
+  500: #167f74,
+  600: #137369,
+  700: #10665d,
+  800: #0d5a52,
+  900: #09413d,
   contrast: (
     50: $dark-primary-text,
     100: $dark-primary-text,
     200: $dark-primary-text,
-    300: $dark-primary-text,
-    400: $dark-primary-text,
-    500: $dark-primary-text,
-    600: $dark-primary-text,
-    700: $dark-primary-text,
-    800: $dark-primary-text,
+    300: $light-primary-text,
+    400: $light-primary-text,
+    500: $light-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
     900: $light-primary-text,
   ),
 );
@@ -57,8 +57,8 @@ $cr-yellow-palette: (
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$app-primary: mat.m2-define-palette($cr-purple-palette, 400, 200, 600);
-$app-accent: mat.m2-define-palette($cr-yellow-palette, 400, 200, 600);
+$app-primary: mat.m2-define-palette($app-primary-palette, 400, 200, 600);
+$app-accent: mat.m2-define-palette($app-secondary-palette, 400, 200, 600);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as `color` or `typography`.
