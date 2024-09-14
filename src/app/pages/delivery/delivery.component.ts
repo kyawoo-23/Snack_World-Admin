@@ -6,6 +6,7 @@ import { TTableColumnDef } from '@models/index';
 import { DeliveryService } from '@services/delivery/delivery.service';
 import { MainLayoutComponent } from '@ui/main-layout/main-layout.component';
 import { TableComponent } from '@ui/table/table.component';
+import { convertToDateTime } from '@utils/common';
 import { Delivery } from 'app/prisma-types';
 
 @Component({
@@ -30,7 +31,7 @@ export class DeliveryComponent implements OnInit {
     {
       columnDef: 'date',
       header: 'Date',
-      cell: (row: Delivery) => row.createdAt,
+      cell: (row: Delivery) => convertToDateTime(row.createdAt),
     },
     {
       columnDef: 'name',

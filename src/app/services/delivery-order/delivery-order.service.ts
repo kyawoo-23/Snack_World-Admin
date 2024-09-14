@@ -13,6 +13,24 @@ export class DeliveryOrderService {
 
   private readonly _http = inject(HttpClient);
 
+  startDeliveryOrder(
+    deliveryOrderId: string,
+  ): Observable<TBaseResponse<DeliveryOrder>> {
+    const url =
+      environment.BASE_URL +
+      this._deliveryOrderUrl +
+      `/${deliveryOrderId}/start`;
+    return this._http.post<TBaseResponse<DeliveryOrder>>(url, {});
+  }
+
+  endDeliveryOrder(
+    deliveryOrderId: string,
+  ): Observable<TBaseResponse<DeliveryOrder>> {
+    const url =
+      environment.BASE_URL + this._deliveryOrderUrl + `/${deliveryOrderId}/end`;
+    return this._http.post<TBaseResponse<DeliveryOrder>>(url, {});
+  }
+
   getDeliveryOrderList(): Observable<TBaseResponse<DeliveryOrder[]>> {
     const url =
       environment.BASE_URL +
