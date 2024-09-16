@@ -6,7 +6,9 @@ const dotenv = require("dotenv").config({ path: "src/.env" });
 
 const envFile = `export const environment = {
     BASE_URL: '${process.env.BASE_URL}',
+};
 `;
+
 const targetPath = path.join(
   __dirname,
   "./src/environments/environment.development.ts",

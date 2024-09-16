@@ -64,7 +64,7 @@ export class LoginComponent implements OnInit {
         error: (err) => {
           this._snackBar.open(err.message, 'Close');
           console.error('Login failed:', err);
-          this.isSubmitting;
+          this.isSubmitting = false;
         },
       });
     }
