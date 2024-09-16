@@ -67,6 +67,7 @@ export class DeliveryComponent implements OnInit {
       .getDeliveryList()
       .subscribe({
         next: (res) => {
+          console.log(res);
           this.data = res.data;
         },
         error: (err) => {
