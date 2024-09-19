@@ -13,7 +13,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
-import { Vendor, VendorUser } from 'app/prisma-types';
+import { Vendor, VendorRemark, VendorUser } from 'app/prisma-types';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoaderComponent } from '@ui/loader/loader.component';
 import { VendorService } from '@services/vendor/vendor.service';
@@ -21,6 +21,8 @@ import { TableComponent } from '../../../ui/table/table.component';
 import { TTableColumnDef } from '@models/index';
 import { PAGE_SIZE, PLACEHOLDER_IMAGE } from '@utils/constants';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { VendorRemarkService } from '@services/vendor-remark/vendor-remark.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-vendor-details',
@@ -36,6 +38,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
     LoaderComponent,
     TableComponent,
     MatPaginatorModule,
+    DatePipe,
   ],
   templateUrl: './vendor-details.component.html',
   styleUrl: './vendor-details.component.scss',
@@ -45,15 +48,40 @@ export class VendorDetailsComponent {
   private readonly _route = inject(ActivatedRoute);
   private readonly _formBuilder = inject(FormBuilder);
   private readonly _vendorSrv = inject(VendorService);
+  private readonly _vendorRemarkSrv = inject(VendorRemarkService);
 
   paramId: string = '';
 
   pageSize = PAGE_SIZE;
   isLoading: boolean = false;
   form!: FormGroup;
+  remarkForm!: FormGroup;
   data: Vendor | null = null;
+  remarks: VendorRemark[] = [];
   dataList: VendorUser[] = [];
+  isCreatingRemark: boolean = false;
   isSubmitting: boolean = false;
+
+  onRemarkSubmit(): void {
+    this.isCreatingRemark = true;
+    this._vendorRemarkSrv
+      .createVendorRemark(this.paramId, this.remarkForm.value.content)
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccess) {
+            this.remarkForm.reset();
+            this._snackBar.open(res.message, 'Close');
+            this._fetchDetails();
+          } else {
+            this._snackBar.open(res.message, 'Close');
+          }
+          this.isCreatingRemark = false;
+        },
+        error: () => {
+          this.isCreatingRemark = false;
+        },
+      });
+  }
 
   onSubmit(): void {
     this.isSubmitting = true;
@@ -80,10 +108,22 @@ export class VendorDetailsComponent {
       name: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
     });
+
+    this.remarkForm = this._formBuilder.group({
+      content: new FormControl('', [Validators.required]),
+    });
   }
 
   private _fetchDetails(): void {
     this.isLoading = true;
+
+    this._vendorRemarkSrv.getVendorRemarkList(this.paramId).subscribe({
+      next: (res) => {
+        if (res.isSuccess) {
+          this.remarks = res.data;
+        }
+      },
+    });
 
     this._vendorSrv.getVendorDetails(this.paramId).subscribe({
       next: (res) => {
