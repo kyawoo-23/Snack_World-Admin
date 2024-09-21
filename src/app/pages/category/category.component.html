@@ -12,13 +12,13 @@
 
 <ng-template #actionTemplate let-data>
   <div class="flex">
-    <button
+    <a
       class="!grid !place-content-center"
       mat-icon-button
       color="primary"
       routerLink="{{ data.categoryId }}"
     >
       <mat-icon>edit</mat-icon>
-    </button>
+    </a>
   </div>
 </ng-template>

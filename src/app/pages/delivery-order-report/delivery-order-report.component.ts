@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { VendorRemarkService } from '@services/vendor-remark/vendor-remark.service';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
@@ -13,14 +13,19 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { VendorRemark } from 'app/prisma-types';
 import { format, subDays } from 'date-fns';
 import { TableComponent } from '@ui/table/table.component';
 import { TTableColumnDef } from '@models/index';
-import { convertToDateTime } from '@utils/common';
+import { convertToDateTime, getDeliveryOrderStatusColor } from '@utils/common';
+import { DeliveryOrderService } from '@services/delivery-order/delivery-order.service';
+import { DeliveryOrder } from '../../prisma-types';
+import { DELIVERY_ORDER_STATUS } from '@utils/constants';
+import { DomSanitizer } from '@angular/platform-browser';
+import { RouterLink } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-remark-report',
+  selector: 'app-delivery-order-report',
   standalone: true,
   imports: [
     TableComponent,
@@ -30,17 +35,20 @@ import { convertToDateTime } from '@utils/common';
     MatButtonModule,
     FormsModule,
     ReactiveFormsModule,
+    RouterLink,
+    MatIcon,
   ],
   providers: [provideNativeDateAdapter()],
-  templateUrl: './remark-report.component.html',
-  styleUrl: './remark-report.component.scss',
+  templateUrl: './delivery-order-report.component.html',
+  styleUrl: './delivery-order-report.component.scss',
 })
-export class RemarkReportComponent implements OnInit {
-  private readonly _vendorRemarkService = inject(VendorRemarkService);
+export class DeliveryOrderReportComponent implements OnInit {
+  private readonly _deliveryOrderService = inject(DeliveryOrderService);
   private readonly _formBuilder = inject(FormBuilder);
+  private readonly _sanitizer = inject(DomSanitizer);
 
   maxDate = format(new Date(), 'yyyy-MM-dd');
-  data: VendorRemark[] = [];
+  data: DeliveryOrder[] = [];
   dateForm!: FormGroup;
   isLoading: boolean = false;
 
@@ -53,7 +61,7 @@ export class RemarkReportComponent implements OnInit {
       endDate: new FormControl(endDate, [Validators.required]),
     });
 
-    this._getVendorRemarkReport({
+    this._getDeliveryOrderReport({
       startDate,
       endDate,
     });
@@ -62,11 +70,14 @@ export class RemarkReportComponent implements OnInit {
   onSubmit(): void {
     if (this.dateForm.valid) {
       const { startDate, endDate } = this.dateForm.value;
-      this._getVendorRemarkReport({ startDate, endDate });
+      this._getDeliveryOrderReport({
+        startDate,
+        endDate,
+      });
     }
   }
 
-  private _getVendorRemarkReport({
+  private _getDeliveryOrderReport({
     startDate,
     endDate,
   }: {
@@ -74,8 +85,9 @@ export class RemarkReportComponent implements OnInit {
     endDate: string;
   }): void {
     this.isLoading = true;
-    this._vendorRemarkService
-      .getVendorRemarkReport({
+
+    this._deliveryOrderService
+      .getDeliveryOrderReport({
         startDate,
         endDate,
       })
@@ -91,26 +103,39 @@ export class RemarkReportComponent implements OnInit {
       });
   }
 
-  columns: TTableColumnDef<VendorRemark>[] = [
+  columns: TTableColumnDef<DeliveryOrder>[] = [
     {
       columnDef: 'no',
       header: 'No.',
-      cell: (row: VendorRemark) => `${this.data.indexOf(row) + 1}.`,
+      cell: (row: DeliveryOrder) => `${this.data.indexOf(row) + 1}.`,
     },
     {
       columnDef: 'date',
       header: 'Date',
-      cell: (row: VendorRemark) => convertToDateTime(row.createdAt),
+      cell: (row: DeliveryOrder) => convertToDateTime(row.createdAt),
+    },
+    {
+      columnDef: 'name',
+      header: 'Delivery Name',
+      cell: (row: DeliveryOrder) => row.deliveryName,
     },
     {
       columnDef: 'vendor',
       header: 'Vendor',
-      cell: (row: VendorRemark) => row.vendor.name,
+      cell: (row: DeliveryOrder) => row.customerOrderVendor.vendorName,
     },
     {
-      columnDef: 'content',
-      header: 'Content',
-      cell: (row: VendorRemark) => row.content,
+      columnDef: 'status',
+      header: 'Status',
+      cell: (row: DeliveryOrder) => {
+        const div = `<div style="background: ${getDeliveryOrderStatusColor(row.deliveryOrderStatus as DELIVERY_ORDER_STATUS)}" class="w-fit rounded text-white px-2 py-1">${row.deliveryOrderStatus}</div>`;
+        return this._sanitizer.bypassSecurityTrustHtml(div);
+      },
+    },
+    {
+      columnDef: 'admin',
+      header: 'Admin',
+      cell: (row: DeliveryOrder) => row.delivery?.admin.name || 'N/A',
     },
   ];
 }

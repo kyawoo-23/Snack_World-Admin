@@ -16,7 +16,7 @@ import { LoginComponent } from '@pages/login/login.component';
 import { NotFoundComponent } from '@pages/not-found/not-found.component';
 import { ProfileComponent } from '@pages/profile/profile.component';
 import { RemarkReportComponent } from '@pages/remark-report/remark-report.component';
-import { ReportComponent } from '@pages/report/report.component';
+import { DeliveryOrderReportComponent } from './pages/delivery-order-report/delivery-order-report.component';
 import { VariantCreateComponent } from '@pages/variant/variant-create/variant-create.component';
 import { VariantDetailsComponent } from '@pages/variant/variant-details/variant-details.component';
 import { VariantComponent } from '@pages/variant/variant.component';
@@ -161,9 +161,9 @@ export const routes: NavRoutes = [
       },
       {
         path: 'report',
-        title: 'Report',
+        title: 'Delivery Order Report',
         icon: 'query_stats',
-        component: ReportComponent,
+        component: DeliveryOrderReportComponent,
       },
       {
         path: 'remark-report',
