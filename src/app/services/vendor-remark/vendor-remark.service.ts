@@ -13,6 +13,20 @@ export class VendorRemarkService {
 
   private readonly _http = inject(HttpClient);
 
+  getVendorRemarkReport({
+    startDate,
+    endDate,
+  }: {
+    startDate: string;
+    endDate: string;
+  }): Observable<TBaseResponse<VendorRemark[]>> {
+    const url =
+      environment.BASE_URL +
+      this._vendorRemarkUrl +
+      `?startDate=${startDate}&endDate=${endDate}`;
+    return this._http.get<TBaseResponse<VendorRemark[]>>(url);
+  }
+
   getVendorRemarkList(id: string): Observable<TBaseResponse<VendorRemark[]>> {
     const url = environment.BASE_URL + this._vendorRemarkUrl + `/${id}`;
     return this._http.get<TBaseResponse<VendorRemark[]>>(url);

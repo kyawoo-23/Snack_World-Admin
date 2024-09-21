@@ -15,6 +15,7 @@ import { DeliveryComponent } from '@pages/delivery/delivery.component';
 import { LoginComponent } from '@pages/login/login.component';
 import { NotFoundComponent } from '@pages/not-found/not-found.component';
 import { ProfileComponent } from '@pages/profile/profile.component';
+import { RemarkReportComponent } from '@pages/remark-report/remark-report.component';
 import { ReportComponent } from '@pages/report/report.component';
 import { VariantCreateComponent } from '@pages/variant/variant-create/variant-create.component';
 import { VariantDetailsComponent } from '@pages/variant/variant-details/variant-details.component';
@@ -163,6 +164,12 @@ export const routes: NavRoutes = [
         title: 'Report',
         icon: 'query_stats',
         component: ReportComponent,
+      },
+      {
+        path: 'remark-report',
+        title: 'Remark Report',
+        icon: 'history_edu',
+        component: RemarkReportComponent,
       },
       {
         title: 'Page not found',

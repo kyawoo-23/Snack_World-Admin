@@ -38,4 +38,18 @@ export class DeliveryOrderService {
       '?type=REQUEST&status=NEW';
     return this._http.get<TBaseResponse<DeliveryOrder[]>>(url);
   }
+
+  getDeliveryOrderReport({
+    startDate,
+    endDate,
+  }: {
+    startDate: string;
+    endDate: string;
+  }): Observable<TBaseResponse<DeliveryOrder[]>> {
+    const url =
+      environment.BASE_URL +
+      this._deliveryOrderUrl +
+      `?type=REQUEST&status=ALL&startDate=${startDate}&endDate=${endDate}`;
+    return this._http.get<TBaseResponse<DeliveryOrder[]>>(url);
+  }
 }
