@@ -2,6 +2,7 @@ import {
   DELIVERY_ORDER_STATUS,
   DELIVERY_STATUS,
   LOCAL_STORAGES,
+  ROLES,
 } from '@utils/constants';
 import { format } from 'date-fns';
 
@@ -17,6 +18,10 @@ export const removeLocalStorageItem = (key: string) => {
   if (localStorage) {
     localStorage.removeItem(key);
   }
+};
+
+export const getUserRole = (): ROLES | undefined => {
+  return JSON.parse(getLocalStorage(LOCAL_STORAGES.USER_DATA) || '{}')?.role;
 };
 
 export const convertToDateTime = (date: string | Date) => {

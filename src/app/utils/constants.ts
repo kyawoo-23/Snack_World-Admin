@@ -47,3 +47,10 @@ export enum DELIVERY_STATUS {
   DELIVERING = 'DELIVERING',
   DELIVERED = 'DELIVERED',
 }
+
+export enum ROLES {
+  SUPER_ADMIN = 'Super Admin',
+  ADMINSTRATOR = 'Administrator',
+  MANAGER = 'Manager',
+  STAFF = 'Operation Staff',
+}

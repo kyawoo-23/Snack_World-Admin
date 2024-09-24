@@ -21,10 +21,11 @@ import { routes } from '@routes';
 import { NgOptimizedImage } from '@angular/common';
 import {
   getLocalStorage,
+  getUserRole,
   removeLocalStorageItem,
   setLocalStorage,
 } from '@utils/common';
-import { LOCAL_STORAGES } from '@utils/constants';
+import { LOCAL_STORAGES, ROLES } from '@utils/constants';
 
 @Component({
   selector: 'app-menu-layout',
@@ -53,6 +54,7 @@ export class MenuLayoutComponent implements OnInit {
   private readonly _observer = inject(BreakpointObserver);
 
   routes = routes;
+  role = getUserRole();
 
   @ViewChild(MatSidenav)
   sidenav!: MatSidenav;
@@ -86,5 +88,17 @@ export class MenuLayoutComponent implements OnInit {
         this.isMobile = false;
       }
     });
+  }
+
+  hasPermission(permission: ROLES[] | null) {
+    if (this.role === ROLES.SUPER_ADMIN) {
+      return true;
+    }
+
+    if (!permission) {
+      return true;
+    }
+
+    return permission.includes(this.role as ROLES);
   }
 }

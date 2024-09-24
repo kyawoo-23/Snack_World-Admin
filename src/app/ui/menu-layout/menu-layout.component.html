@@ -60,7 +60,7 @@
       <mat-nav-list class="overflow-auto">
         @for (route of routes; track $index) {
           @for (menu of route.children; track $index) {
-            @if (menu.icon) {
+            @if (menu.icon && hasPermission(menu.role)) {
               <a
                 mat-list-item
                 routerLink="{{ menu.path }}"
