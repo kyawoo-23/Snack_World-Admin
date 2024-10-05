@@ -26,6 +26,7 @@ import { VendorComponent } from '@pages/vendor/vendor.component';
 import { MenuLayoutComponent } from '@ui/menu-layout/menu-layout.component';
 import { ROLES } from '@utils/constants';
 import { roleGuard } from '@guards/role/role.guard';
+import { VendorSalesReportComponent } from '@pages/vendor-sales-report/vendor-sales-report.component';
 
 interface NavRoute extends Route {
   icon: string | null;
@@ -206,6 +207,14 @@ export const routes: NavRoutes = [
         title: 'Delivery Order Report',
         icon: 'query_stats',
         component: DeliveryOrderReportComponent,
+        canActivate: [roleGuard],
+        role: [ROLES.MANAGER],
+      },
+      {
+        path: 'vendor-sales-report',
+        title: 'Vendor Sales Report',
+        icon: 'leaderboard',
+        component: VendorSalesReportComponent,
         canActivate: [roleGuard],
         role: [ROLES.MANAGER],
       },

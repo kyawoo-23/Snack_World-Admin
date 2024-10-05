@@ -61,35 +61,23 @@ export class DeliveryOrderReportComponent implements OnInit {
       endDate: new FormControl(endDate, [Validators.required]),
     });
 
-    this._getDeliveryOrderReport({
-      startDate,
-      endDate,
-    });
+    this._getDeliveryOrderReport();
   }
 
   onSubmit(): void {
     if (this.dateForm.valid) {
       const { startDate, endDate } = this.dateForm.value;
-      this._getDeliveryOrderReport({
-        startDate,
-        endDate,
-      });
+      this._getDeliveryOrderReport();
     }
   }
 
-  private _getDeliveryOrderReport({
-    startDate,
-    endDate,
-  }: {
-    startDate: string;
-    endDate: string;
-  }): void {
+  private _getDeliveryOrderReport(): void {
     this.isLoading = true;
 
     this._deliveryOrderService
       .getDeliveryOrderReport({
-        startDate,
-        endDate,
+        startDate: this.dateForm.value.startDate,
+        endDate: this.dateForm.value.endDate,
       })
       .subscribe({
         next: (res) => {

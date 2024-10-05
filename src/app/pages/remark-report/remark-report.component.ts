@@ -53,31 +53,21 @@ export class RemarkReportComponent implements OnInit {
       endDate: new FormControl(endDate, [Validators.required]),
     });
 
-    this._getVendorRemarkReport({
-      startDate,
-      endDate,
-    });
+    this._getVendorRemarkReport();
   }
 
   onSubmit(): void {
     if (this.dateForm.valid) {
-      const { startDate, endDate } = this.dateForm.value;
-      this._getVendorRemarkReport({ startDate, endDate });
+      this._getVendorRemarkReport();
     }
   }
 
-  private _getVendorRemarkReport({
-    startDate,
-    endDate,
-  }: {
-    startDate: string;
-    endDate: string;
-  }): void {
+  private _getVendorRemarkReport(): void {
     this.isLoading = true;
     this._vendorRemarkService
       .getVendorRemarkReport({
-        startDate,
-        endDate,
+        startDate: this.dateForm.value.startDate,
+        endDate: this.dateForm.value.endDate,
       })
       .subscribe({
         next: (res) => {
