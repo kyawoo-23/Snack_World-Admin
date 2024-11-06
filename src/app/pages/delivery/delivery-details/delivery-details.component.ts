@@ -133,10 +133,13 @@ export class DeliveryDetailsComponent {
   }
 
   get getTotalAmount() {
-    return this.data?.deliveryOrder.reduce(
-      (acc, order) => acc + order.customerOrderVendor.customerOrder.totalPrice,
-      0,
-    );
+    return this.data?.deliveryOrder
+      .reduce(
+        (acc, order) =>
+          acc + order.customerOrderVendor.customerOrder.totalPrice,
+        0,
+      )
+      .toFixed(2);
   }
 
   get getDeliveredOrders() {
