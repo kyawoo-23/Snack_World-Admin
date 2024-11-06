@@ -17,6 +17,9 @@ export const roleGuard: CanActivateFn = (route, state) => {
     if (permission && permission.includes(role || '')) {
       return true;
     } else {
+      if (role == ROLES.MANAGER) {
+        return router.navigate(['/account']);
+      }
       return router.navigate(['/']);
     }
   } else {
