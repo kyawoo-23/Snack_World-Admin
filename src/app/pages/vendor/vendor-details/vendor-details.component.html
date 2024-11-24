@@ -84,7 +84,7 @@
           color="primary"
           type="submit"
           class="!py-7"
-          [disabled]="isCreatingRemark"
+          [disabled]="isCreatingRemark || remarkForm.invalid"
         >
           {{ isCreatingRemark ? "Saving..." : "Save" }}
         </button>
